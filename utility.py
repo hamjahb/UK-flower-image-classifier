@@ -2,7 +2,6 @@ import tensorflow as tf
 import tensorflow_hub as hub
 import json
 
-image_size = 224
 
 def get_class_names(json_file):
     with open(json_file, 'r') as f:
@@ -16,12 +15,16 @@ def get_class_names(json_file):
 
 
 def load_model(model_path):
-    model = tf.keras.models.load_model(model_path, custom_objects={'KerasLayer':hub.KerasLayer})
+    saved_keras_model_filepath = 'Trained_Model/Model.h5'
+    model = tf.keras.models.load_model(saved_keras_model_filepath, custom_objects={'KerasLayer':hub.KerasLayer})
+
     print(model.summary())
     return model
 
 
 def process_image(test_image):
+    image_size = 224
+
     test_image = tf.convert_to_tensor(test_image, dtype=tf.float32)
     test_image = tf.image.resize(test_image, (image_size, image_size)).numpy()
     test_image /= 255
